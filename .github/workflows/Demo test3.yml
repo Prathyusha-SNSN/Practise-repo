@@ -1,0 +1,46 @@
+name: Production Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: echo "Installing dependencies..."
+
+      - name: Run Tests
+        run: echo "Running tests..."
+
+      - name: Build Application
+        run: echo "Building application..."
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-build
+          path: .
+
+  deploy-production:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-build
+
+      - name: Deploy to Production
+        run: |
+          echo "Starting deployment..."
+          echo "Deploying application to production server..."
+          echo "Deployment completed successfully!"

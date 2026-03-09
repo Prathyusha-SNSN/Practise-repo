@@ -1,0 +1,51 @@
+name: Production Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  APP_VERSION: v1.0.${{ github.run_number }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Show Version
+        run: echo "Application Version: $APP_VERSION"
+
+      - name: Install Dependencies
+        run: echo "Installing dependencies..."
+
+      - name: Run Tests
+        run: echo "Running tests..."
+
+      - name: Build Application
+        run: echo "Building version $APP_VERSION"
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-build-${{ env.APP_VERSION }}
+          path: .
+
+  deploy-production:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-build-${{ env.APP_VERSION }}
+
+      - name: Deploy Application
+        run: |
+          echo "Deploying version $APP_VERSION to production..."
+          echo "Deployment successful!"

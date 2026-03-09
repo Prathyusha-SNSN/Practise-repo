@@ -1,0 +1,29 @@
+name: Production Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: echo "Installing dependencies..."
+
+      - name: Run Tests
+        run: echo "Running tests..."
+
+  deploy-production:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Deploy to Production
+        run: echo "Deploying application to production server..."
